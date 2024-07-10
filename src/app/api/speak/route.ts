@@ -6,13 +6,13 @@ import { NextRequest, NextResponse } from "next/server";
  * @param {NextRequest} req - The HTTP request
  * @returns {Promise<NextResponse>} A NextResponse with the streamable response
  */
-export async function POST(req: NextRequest) {
-  // gotta use the request object to invalidate the cache every request :vomit:
-  const url = req.url;
-  const model = req.nextUrl.searchParams.get("model") ?? "aura-asteria-en";
-  const message: Message = await req.json();
-  const start = Date.now();
+export async function POST(req: NextRequest): Promise<NextResponse> {
+  const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY as string;
+  if (!ELEVENLABS_API_KEY) {
+    throw new Error("Missing ELEVENLABS_API_KEY in environment variables");
+  }
 
+  const message: Message = await req.json();
   let text = message.content;
 
   text = text
@@ -30,32 +30,35 @@ export async function POST(req: NextRequest) {
       }
     );
 
-  return await fetch(
-    `${process.env.DEEPGRAM_STT_DOMAIN}/v1/speak?model=${model}`,
-    {
-      method: "POST",
-      body: JSON.stringify({ text }),
-      headers: {
-        "Content-Type": `application/json`,
-        Authorization: `token ${process.env.DEEPGRAM_API_KEY || ""}`,
-        "X-DG-Referrer": url,
-      },
-    }
-  )
-    .then(async (response) => {
-      const headers = new Headers();
-      headers.set("X-DG-Latency", `${Date.now() - start}`);
-      headers.set("Content-Type", "audio/mp3");
-
-      if (!response?.body) {
-        return new NextResponse("Unable to get response from API.", {
-          status: 500,
-        });
+  const options = {
+    method: 'POST',
+    headers: {
+      'xi-api-key': ELEVENLABS_API_KEY,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      text: text,
+      voice_settings: {
+        stability: 0.5,
+        similarity_boost: 0.2
       }
-
-      return new NextResponse(response.body, { headers });
     })
-    .catch((error: any) => {
-      return new NextResponse(error || error?.message, { status: 500 });
+  };
+
+  try {
+    const response = await fetch('https://api.elevenlabs.io/v1/text-to-speech/21m00Tcm4TlvDq8ikWAM/stream', options);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch: ${response.statusText}`);
+    }
+
+    return new NextResponse(response.body, {
+      headers: {
+        'Content-Type': 'audio/mp3'
+      }
     });
+  } catch (err:any) {
+    console.error(err);
+    return new NextResponse(`Error: ${err.message}`, { status: 500 });
+  }
 }

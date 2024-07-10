@@ -29,23 +29,26 @@ const EmailVerification = ({ params }: { params: { token: string } }) => {
     }, [params.token]);
 
     if (loading)
-        return <div className="text-lg text-gray-700">Verifying your email...</div>;
+        return <div className="text-lg text-[#36E891] h-[100%] w-[100%] bg-[#7A7A7A] text-center text-[40px] pt-[5rem]">Verifying your email...</div>;
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6 text-center">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-black p-6 text-center">
             {isVerified ? (
-                <div className="bg-white p-10 rounded-lg shadow-lg">
-                    <h1 className="text-2xl font-bold text-green-600">Email Verified Successfully!</h1>
-                    <p className="mt-4 text-gray-700">Your email has been verified. You can now log in to your account.</p>
-                    <button
-                        onClick={() => router.push('/login')}
-                        className="mt-6 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                    >
-                        Go to Login
-                    </button>
+                <div className="bg-black p-10 rounded-lg shadow-lg">
+                    <div className="relative block w-full glass p-6 sm:p-8 lg:p-12 rounded-xl bg-[#345830] text-white">
+                        <h1 className="text-2xl font-bold text-white">Email Verified Successfully!</h1>
+                        <p className="mt-4 text-white">Your email has been verified. You can now log in to your account.</p>
+                        <button type="button" className='w-full' onClick={() => router.push('/login')}>
+                            <span className="mt-4 block font-semibold">
+                                <div className="border-2 w-full border-[#345830] rounded-xl text-white bg-gradient-to-r from-[#345830] to-black p-4">
+                                    Go to Login
+                                </div>
+                            </span>
+                        </button>
+                    </div>
                 </div>
             ) : (
-                <div className="bg-white p-10 rounded-lg shadow-lg">
+                <div className="bg-black p-10 rounded-lg shadow-lg">
                     <h1 className="text-2xl font-bold text-red-600">Email Verification Failed</h1>
                     <p className="mt-4 text-gray-700">{error}</p>
                 </div>

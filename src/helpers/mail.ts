@@ -63,7 +63,7 @@ export const emailVerification = async (email: string, token: string, name: stri
                         width: 200px;
                         margin: 20px auto;
                         padding: 15px;
-                        background-color: #007BFF;
+                        background-color: #00ED9B;
                         color: white !important; /* Ensure the text color is white */
                         text-align: center;
                         text-decoration: none;
@@ -84,9 +84,6 @@ export const emailVerification = async (email: string, token: string, name: stri
             </head>
             <body>
                 <div class="email-container">
-                    <div class="email-header">
-                        <img src="https://via.placeholder.com/150" alt="Company Logo">
-                    </div>
                     <div class="email-body">
                         <h1>Hello, ${name}!</h1>
                         <p>Thank you for signing up with us. Please confirm your email address by clicking the button below:</p>
@@ -100,8 +97,8 @@ export const emailVerification = async (email: string, token: string, name: stri
                     </div>
                     <div class="email-footer">
                         <p>Thank you,</p>
-                        <p>The Company Team</p>
-                        <p>© 2024 Company Name. All rights reserved.</p>
+                        <p>weya.ai</p>
+                        <p>© 2024 Acme Softech Pvt. Ltd. All rights reserved.</p>
                     </div>
                 </div>
             </body>
