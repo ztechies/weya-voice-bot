@@ -85,7 +85,6 @@ const Reg = () => {
                 console.error('Error fetching IP info:', error);
             }
         };
-        toast("Verification link send to your email, please check",{position: "top-center"})
 
         fetchCountry();
     }, []);
